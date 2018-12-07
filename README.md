@@ -171,10 +171,11 @@ public class LoggingCacheTest {
 
 #### Aop
 
-#### 每个方法相当于一个Cache，默认情况，所有参数作为Key
+#### 每个方法相当于一个Cache，默认情况，所有参数作为Key 
 
 **1：如果方法参数的类型是 Object 则必须要重写HashCode 与Equase 方法**
 **2：@Param 注解代码用哪个参数作为key**
+**3：其它项目引用：@Import(CacheProxy.class)**
 
 ```$xslt
 package com.geek.commons.cache.aop;
