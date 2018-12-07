@@ -20,7 +20,7 @@ public class LruCacheTest {
         lruCache.put(1,1);
         lruCache.put(2,2);
         int s =lruCache.size();
-        assertEquals(1,1);
+        assertEquals(s,1);
     }
 
     @Test
@@ -29,7 +29,7 @@ public class LruCacheTest {
         lruCache.put(1,1);
         lruCache.put(1,2);
         int s =lruCache.size();
-        assertEquals(1,1);
+        assertEquals(s,1);
         int r=lruCache.getValue(1);
         assertEquals(2,r);
         assertEquals(lruCache,new HashMapCache("Default"));
