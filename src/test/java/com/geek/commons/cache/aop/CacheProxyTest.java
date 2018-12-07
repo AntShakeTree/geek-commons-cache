@@ -46,7 +46,7 @@ public class CacheProxyTest  extends BaseTest{
         }
 
         @Cache(refresh = true, interval = 1, value = CacheType.GUAVA)
-        public String refresh(String key) {
+        public String refresh(@Param String key) {
             logger.warn("refresh execute.");
             return "Hello_world" + key + RandomUtils.nextInt();
         }

@@ -38,6 +38,8 @@ public class CacheManager {
 
 
             CacheType type = cache.value();
+            boolean fresh = cache.refresh();
+            if (fresh) type=CacheType.GUAVA;
             int interval = cache.interval();
             TimeUnit timeUnit = cache.timeUnit();
             int lru = cache.lru();
@@ -47,7 +49,7 @@ public class CacheManager {
                     ca.setFunction(function);
                     break;
                 case GUAVA:
-                    boolean fresh = cache.refresh();
+
                     if (fresh) {
                         ca = BaseGuavaCache.build(id, cache.size(), function, interval, timeUnit, 10, TimeUnit.HOURS);
                     } else {
