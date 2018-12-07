@@ -9,7 +9,6 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,11 +34,11 @@ public class CacheProxy {
     public void cachePointcut() {
     }
 
-    @Value("${geek.redis.host:39.105.179.138}")
+    @Value("${geek.redis.host:127.0.0.1}")
     private String host;
     @Value("${geek.redis.port:6379}")
     private int port;
-    @Value("${geek.redis.password:jieke@123}")
+    @Value("${geek.redis.password:123}")
     private String password;
 
 
