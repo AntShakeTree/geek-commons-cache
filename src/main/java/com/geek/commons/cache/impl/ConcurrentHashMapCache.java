@@ -21,11 +21,28 @@ public class ConcurrentHashMapCache implements Cache {
     private final ConcurrentMap concurrentMap;
 
     private final String id;
+    private final long defaultTimes;
+    private final TimeUnit timeUnit;
+    private final boolean fresh;
 
     public ConcurrentHashMapCache(String id) {
         this.id = id;
         concurrentMap = new ConcurrentHashMap();
+        defaultTimes = 0;
+        timeUnit = TimeUnit.SECONDS;
+        fresh = false;
         CacheManager.put(id, this);
+    }
+
+    public ConcurrentHashMapCache(String id, long defaultTimes, TimeUnit timeUnit) {
+        this.fresh = true;
+        this.id = id;
+        concurrentMap = new ConcurrentHashMap();
+
+        this.defaultTimes = defaultTimes;
+        this.timeUnit = timeUnit;
+        CacheManager.put(id, this);
+
     }
 
     /**
@@ -44,8 +61,13 @@ public class ConcurrentHashMapCache implements Cache {
         V v = (V) this.concurrentMap.get(key);
         if (v == null) {
             Object re = apply();
-            if (re != null)
-                this.put(key, re);
+            if (re != null) {
+                if (fresh) {
+                    this.put(key, re, this.defaultTimes, this.timeUnit);
+                } else {
+                    this.put(key, re);
+                }
+            }
             return (V) this.concurrentMap.get(key);
         } else {
             return v;
@@ -135,7 +157,6 @@ public class ConcurrentHashMapCache implements Cache {
         }
         return getId().hashCode();
     }
-
 
 
 }

@@ -23,9 +23,24 @@ public class HashMapCache implements Cache {
 
     private Function function;
     private Object refreshParams;
+    private final long defaultTimes;
+    private final TimeUnit timeUnit;
+    private final boolean fresh;
 
     public HashMapCache(String id) {
         this.id = id;
+        fresh = false;
+        timeUnit = null;
+        defaultTimes = 0;
+        CacheManager.put(id, this);
+
+    }
+
+    public HashMapCache(String id, long defaultTimes, TimeUnit timeUnit) {
+        this.fresh = true;
+        this.id = id;
+        this.defaultTimes = defaultTimes;
+        this.timeUnit = timeUnit;
         CacheManager.put(id, this);
     }
 
@@ -42,8 +57,13 @@ public class HashMapCache implements Cache {
         V v = (V) this.hashMap.get(key);
         if (v == null) {
             Object re = apply();
-            if (re != null)
-                this.put(key, re);
+            if (re != null) {
+                if (fresh) {
+                    this.put(key, re, this.defaultTimes, this.timeUnit);
+                } else {
+                    this.put(key, re);
+                }
+            }
             return (V) this.hashMap.get(key);
         } else {
             return v;
@@ -55,10 +75,12 @@ public class HashMapCache implements Cache {
             return this.function.apply(refreshParams);
         return null;
     }
+
     public <K, V> void put(K key, V value, long times, TimeUnit timeUnit) {
         this.hashMap.put(key, value);
         queue().put(new DelayItems(key, times, timeUnit).id(id));
     }
+
     @Override
     public <K, V> void put(K key, V value) {
         this.hashMap.put(key, value);

@@ -64,17 +64,17 @@ public class CacheManager {
             return ca;
         }
         synchronized (lock) {
-
-
             CacheType type = cache.value();
             boolean fresh = cache.refresh();
-            if (fresh) type = CacheType.GUAVA;
             int interval = cache.interval();
             TimeUnit timeUnit = cache.timeUnit();
             int lru = cache.lru();
             switch (type) {
                 case HASH:
-                    ca = new HashMapCache(id);
+                    if (fresh) {
+                        ca = new HashMapCache(id, interval, timeUnit);
+                    } else
+                        ca = new HashMapCache(id);
                     ca.setFunction(function);
                     break;
                 case GUAVA:
@@ -85,7 +85,10 @@ public class CacheManager {
                     }
                     break;
                 case CONCURRENT:
-                    ca = new ConcurrentHashMapCache(id);
+                    if (fresh) {
+                        ca = new ConcurrentHashMapCache(id, interval, timeUnit);
+                    } else
+                        ca = new ConcurrentHashMapCache(id);
                     ca.setFunction(function);
                     break;
             }

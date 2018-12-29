@@ -45,7 +45,7 @@ public class CacheProxyTest  extends BaseTest{
             return "Hello_world" + key + RandomUtils.nextInt();
         }
 
-        @Cache(refresh = true, interval = 1, value = CacheType.GUAVA)
+        @Cache(refresh = true, interval = 1, value = CacheType.HASH)
         public String refresh(String key) {
             logger.warn("refresh execute.");
             return "Hello_world" + key + RandomUtils.nextInt();
@@ -89,6 +89,7 @@ public class CacheProxyTest  extends BaseTest{
     @Test
     public void refresh() throws InterruptedException {
         String res = target.refresh("refresh");
+
         String res2 = target.refresh("refresh");
         assertEquals(res, res2);
         Thread.sleep(5000);
