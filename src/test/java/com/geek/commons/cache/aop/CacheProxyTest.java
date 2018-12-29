@@ -45,7 +45,7 @@ public class CacheProxyTest  extends BaseTest{
             return "Hello_world" + key + RandomUtils.nextInt();
         }
 
-        @Cache(refresh = true, interval = 1, value = CacheType.HASH)
+        @Cache(refresh = true, interval = 5, value = CacheType.HASH)
         public String refresh(String key) {
             logger.warn("refresh execute.");
             return "Hello_world" + key + RandomUtils.nextInt();
@@ -92,7 +92,7 @@ public class CacheProxyTest  extends BaseTest{
 
         String res2 = target.refresh("refresh");
         assertEquals(res, res2);
-        Thread.sleep(5000);
+        Thread.sleep(6000);
         String res3 = target.refresh("refresh");
         logger.warn("Res 1 " + res);
         logger.warn("Res 3 " + res3);
