@@ -16,9 +16,7 @@ import org.springframework.data.redis.connection.RedisPassword;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
-import org.springframework.stereotype.Component;
 
 /**
  * @Description: geek-data-platform   Aop
@@ -26,9 +24,7 @@ import org.springframework.stereotype.Component;
  * @Date: 2018-10-26 18:14
  */
 @Aspect
-@Component
 @Configuration
-@EnableRedisRepositories
 public class CacheProxy {
     @Pointcut("@annotation(com.geek.commons.cache.annotations.Cache)")// the pointcut expression
     public void cachePointcut() {
