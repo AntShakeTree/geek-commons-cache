@@ -60,9 +60,9 @@ public class ConcurrentHashMapCache implements Cache {
     public <K, V> V getValue(K key) {
         V v = (V) this.concurrentMap.get(key);
         if (v == null) {
-            synchronized (this){
-                if (v==null){
-                    this.putIfSent(key);
+            synchronized (this) {
+                if (v == null) {
+                    v = (V) this.putIfSent(key);
                 }
             }
 
@@ -72,7 +72,7 @@ public class ConcurrentHashMapCache implements Cache {
         }
     }
 
-    private <K>void putIfSent(K key){
+    private <K> Object putIfSent(K key) {
         Object re = apply();
         if (re != null) {
             if (fresh) {
@@ -80,8 +80,11 @@ public class ConcurrentHashMapCache implements Cache {
             } else {
                 this.put(key, re);
             }
+            return re;
         }
+        return null;
     }
+
     private Object apply() {
         if (this.getFunction() != null)
             return this.function.apply(refreshParams);

@@ -6,7 +6,7 @@
     <groupId>com.geek</groupId>
     <artifactId>geek-commons-cache</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.0.15</version>
+    <version>1.0.0.16</version>
     <name>geek-commons-cache</name>
     <url>http://maven.apache.org</url>
     <properties>
@@ -32,6 +32,17 @@
         <!--<version>2.1.0.RELEASE</version>-->
         <!--<relativePath/> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
     <!--</parent>-->
+
+    <!--<distributionManagement>-->
+    <!--<repository>-->
+    <!--<id>rdc-releases</id>-->
+    <!--<url>https://repo.rdc.aliyun.com/repository/35483-release-3xNPdt/</url>-->
+    <!--</repository>-->
+    <!--<snapshotRepository>-->
+    <!--<id>rdc-snapshots</id>-->
+    <!--<url>https://repo.rdc.aliyun.com/repository/35483-snapshot-6ZBV2M/</url>-->
+    <!--</snapshotRepository>-->
+    <!--</distributionManagement>-->
 
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-aop -->

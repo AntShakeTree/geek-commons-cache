@@ -6,7 +6,11 @@ import com.geek.commons.cache.enums.CacheType;
 import com.geek.commons.cache.impl.BaseGuavaCache;
 import com.geek.commons.cache.impl.ConcurrentHashMapCache;
 import com.geek.commons.cache.impl.HashMapCache;
+import com.geek.commons.cache.impl.RedisCache;
 import com.google.common.base.Function;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,6 +25,7 @@ import java.util.concurrent.TimeUnit;
  * @Author: Captain.Ma
  * @Date: 2018-10-28 11:19
  */
+@Slf4j
 public class CacheManager {
     private static final Map<String, com.geek.commons.cache.Cache> CACHE_MAP = new ConcurrentHashMap<>();
 
@@ -51,6 +56,16 @@ public class CacheManager {
                 break;
         }
         CACHE_MAP.put(id, cache);
+        return cache;
+    }
+
+
+    public static com.geek.commons.cache.Cache createRedisCache(String id, RedisTemplate redisTemplate) {
+        if (cache(id) != null) {
+            return cache(id);
+        }
+        Cache cache = new RedisCache(redisTemplate, id);
+        CACHE_MAP.putIfAbsent(id, cache);
         return cache;
     }
 
@@ -126,15 +141,21 @@ public class CacheManager {
     private static final DelayQueue<DelayItems> queue = new DelayQueue<>();
 
     static {
-        new Thread(() -> {
-            try {
-                DelayItems delayItems = queue.take();
-                Object o = delayItems.getKey();
-                CacheManager.cache(delayItems.getId()).remove(o);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }).start();
+        new BasicThreadFactory.Builder().daemon(true).namingPattern("CACHE-MANAGER-DQ").uncaughtExceptionHandler((t, e) -> log.error(t.getName(), e)).build().newThread(
+                () -> {
+                    DelayItems delayItems = null;
+                    try {
+                        delayItems = queue.take();
+
+                        Object o = delayItems.getKey();
+                        CacheManager.cache(delayItems.getId()).remove(o);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        throw new RuntimeException(e);
+                    }
+                }
+        ).start();
+
     }
 
     public static DelayQueue<DelayItems> queue() {
