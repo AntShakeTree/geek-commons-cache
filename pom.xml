@@ -33,16 +33,16 @@
         <!--<relativePath/> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
     <!--</parent>-->
 
-    <!--<distributionManagement>-->
-    <!--<repository>-->
-    <!--<id>rdc-releases</id>-->
-    <!--<url>https://repo.rdc.aliyun.com/repository/35483-release-3xNPdt/</url>-->
-    <!--</repository>-->
-    <!--<snapshotRepository>-->
-    <!--<id>rdc-snapshots</id>-->
-    <!--<url>https://repo.rdc.aliyun.com/repository/35483-snapshot-6ZBV2M/</url>-->
-    <!--</snapshotRepository>-->
-    <!--</distributionManagement>-->
+    <distributionManagement>
+    <repository>
+    <id>rdc-releases</id>
+    <url>https://repo.rdc.aliyun.com/repository/35483-release-3xNPdt/</url>
+    </repository>
+    <snapshotRepository>
+    <id>rdc-snapshots</id>
+    <url>https://repo.rdc.aliyun.com/repository/35483-snapshot-6ZBV2M/</url>
+    </snapshotRepository>
+    </distributionManagement>
 
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-aop -->

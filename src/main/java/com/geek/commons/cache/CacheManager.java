@@ -1,5 +1,6 @@
 package com.geek.commons.cache;
 
+import com.geek.commons.cache.decorders.ComposeCache;
 import com.geek.commons.cache.decorders.LoggingCache;
 import com.geek.commons.cache.decorders.LruCache;
 import com.geek.commons.cache.enums.CacheType;
@@ -65,6 +66,15 @@ public class CacheManager {
             return cache(id);
         }
         Cache cache = new RedisCache(redisTemplate, id);
+        CACHE_MAP.putIfAbsent(id, cache);
+        return cache;
+    }
+
+    public static com.geek.commons.cache.Cache createComposeCache(String id, Cache... caches) {
+        if (cache(id) != null) {
+            return cache(id);
+        }
+        Cache cache = new ComposeCache(id, caches);
         CACHE_MAP.putIfAbsent(id, cache);
         return cache;
     }
