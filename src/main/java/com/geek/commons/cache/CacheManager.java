@@ -62,7 +62,7 @@ public class CacheManager {
 
 
     public static com.geek.commons.cache.Cache createRedisCache(String id, RedisTemplate redisTemplate) {
-        if (cache(id) != null) {
+        if (cache(id) != null && cache(id) instanceof RedisCache) {
             return cache(id);
         }
         Cache cache = new RedisCache(redisTemplate, id);
@@ -71,7 +71,7 @@ public class CacheManager {
     }
 
     public static com.geek.commons.cache.Cache createComposeCache(String id, Cache... caches) {
-        if (cache(id) != null) {
+        if (cache(id) != null && cache(id) instanceof ComposeCache) {
             return cache(id);
         }
         Cache cache = new ComposeCache(id, caches);
