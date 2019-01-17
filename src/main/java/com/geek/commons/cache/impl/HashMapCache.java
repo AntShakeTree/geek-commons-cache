@@ -84,6 +84,9 @@ public class HashMapCache implements Cache {
     @Override
     public <K, V> void put(K key, V value) {
         this.hashMap.put(key, value);
+        if (defaultTimes > 0) {
+            queue().put(new DelayItems(key, defaultTimes, timeUnit).id(id));
+        }
     }
 
     /**

@@ -93,7 +93,12 @@ public class ConcurrentHashMapCache implements Cache {
 
     @Override
     public <K, V> void put(K key, V value) {
-        this.concurrentMap.put(key, value);
+        synchronized (concurrentMap) {
+            this.concurrentMap.put(key, value);
+            if (defaultTimes > 0) {
+                this.put(key, value, defaultTimes, timeUnit);
+            }
+        }
     }
 
     public <K, V> void put(K key, V value, long times, TimeUnit timeUnit) {
