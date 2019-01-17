@@ -52,4 +52,10 @@ public interface Cache {
     public Function getFunction();
 
     public void setFunction(Function function);
+
+    public default  <K, V> void putIfAbsent(K key, V value) {
+        if (getValue(key)==null){
+            this.put(key,value);
+        }
+    }
 }

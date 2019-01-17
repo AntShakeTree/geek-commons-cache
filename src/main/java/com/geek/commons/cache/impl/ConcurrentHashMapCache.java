@@ -169,5 +169,8 @@ public class ConcurrentHashMapCache implements Cache {
         return getId().hashCode();
     }
 
+    public <K, V> void putIfAbsent(K k, V v) {
+        this.concurrentMap.putIfAbsent(k, v);
+    }
 
 }

@@ -39,8 +39,6 @@ public class ComposeCache implements Cache {
             }
         }
         CacheManager.put(id, this);
-
-
     }
 
 
@@ -57,6 +55,7 @@ public class ComposeCache implements Cache {
         for (Cache cache : caches) {
             V v = cache.getValue(key);
             if (v != null) {
+                this.putIfAbsent(key, v);
                 return v;
             }
         }
@@ -130,5 +129,13 @@ public class ComposeCache implements Cache {
 
     public Cache getCache(int index) {
         return this.caches.get(index);
+    }
+
+    public <K, V> void putIfAbsent(K key, V value) {
+        for (Cache cache : caches) {
+            if (cache.getValue(key) == null) {
+                this.put(key, value);
+            }
+        }
     }
 }

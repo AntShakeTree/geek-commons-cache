@@ -17,9 +17,21 @@ public class RedisCache implements Cache {
 
     private Object refreshParams;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final long defaultFreshTime;
+    private final TimeUnit timeUnit;
 
     public RedisCache(RedisTemplate<String, Object> redisTemplate, String id) {
         this.redisTemplate = redisTemplate;
+        this.defaultFreshTime = 10;
+        this.timeUnit = TimeUnit.HOURS;
+        this.id = id;
+        CacheManager.put(id, this);
+    }
+
+    public RedisCache(RedisTemplate<String, Object> redisTemplate, String id, long defaultFreshTime, TimeUnit timeUnit) {
+        this.redisTemplate = redisTemplate;
+        this.defaultFreshTime = defaultFreshTime;
+        this.timeUnit = timeUnit;
         this.id = id;
         CacheManager.put(id, this);
     }
@@ -46,14 +58,16 @@ public class RedisCache implements Cache {
             return (V) redisTemplate.opsForValue().get(key(key));
         }
     }
+
     private Object apply() {
         if (this.getFunction() != null)
             return this.function.apply(refreshParams);
         return null;
     }
+
     @Override
     public <K, V> void put(K key, V value) {
-        this.put(key, value, 10, TimeUnit.HOURS);
+        this.put(key, value, defaultFreshTime, timeUnit);
     }
 
     @Override
