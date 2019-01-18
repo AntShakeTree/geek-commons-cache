@@ -93,11 +93,9 @@ public class ConcurrentHashMapCache implements Cache {
 
     @Override
     public <K, V> void put(K key, V value) {
-        synchronized (concurrentMap) {
-            this.concurrentMap.put(key, value);
-            if (defaultTimes > 0) {
-                this.put(key, value, defaultTimes, timeUnit);
-            }
+        this.concurrentMap.put(key, value);
+        if (defaultTimes > 0) {
+            queue().put(new DelayItems(key, defaultTimes, timeUnit).id(id));
         }
     }
 
