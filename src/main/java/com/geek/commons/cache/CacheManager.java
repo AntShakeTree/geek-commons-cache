@@ -58,6 +58,13 @@ public class CacheManager {
         return cache;
     }
 
+    public static <K, V> BaseGuavaCache createLordingCache(String id, int size, Function<K, V> valueWhenExpiredFunction, int refreshDuration, TimeUnit refreshTimeunit, int expireDuration, TimeUnit expireTimeunit) {
+        if (cache(id) != null) {
+            return (BaseGuavaCache) cache(id);
+        }
+        return new BaseGuavaCache(id, size, valueWhenExpiredFunction, refreshDuration, refreshTimeunit, expireDuration, expireTimeunit);
+    }
+
     public static com.geek.commons.cache.Cache createLocalCache(String id, CacheType cacheType, long defaultTime, TimeUnit timeUnit) {
         if (cache(id) != null) {
             return cache(id);
