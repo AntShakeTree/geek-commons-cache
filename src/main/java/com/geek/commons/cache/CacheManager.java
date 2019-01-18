@@ -16,9 +16,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.DelayQueue;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 
 /**
@@ -150,22 +148,26 @@ public class CacheManager {
 
     private static final DelayQueue<DelayItems> queue = new DelayQueue<>();
 
-    static {
-        new BasicThreadFactory.Builder().daemon(true).namingPattern("CACHE-MANAGER-DQ").uncaughtExceptionHandler((t, e) -> log.error(t.getName(), e)).build().newThread(
-                () -> {
-                    DelayItems delayItems = null;
-                    try {
-                        delayItems = queue.take();
+    private static final Executor exec = Executors.newSingleThreadExecutor(
+            new BasicThreadFactory.Builder().daemon(true).namingPattern("CACHE-MANAGER-DQ").uncaughtExceptionHandler((t, e) -> log.error(t.getName(), e)).build()
+    );
 
-                        Object o = delayItems.getKey();
-                        CacheManager.cache(delayItems.getId()).remove(o);
-                    } catch (InterruptedException e) {
-                        Thread.currentThread().interrupt();
-                        throw new RuntimeException(e);
+    static {
+        exec.execute(
+                () -> {
+                    while (true) {
+                        DelayItems delayItems = null;
+                        try {
+                            delayItems = queue.take();
+                            Object o = delayItems.getKey();
+                            CacheManager.cache(delayItems.getId()).remove(o);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                            throw new RuntimeException(e);
+                        }
                     }
                 }
-        ).start();
-
+        );
     }
 
     public static DelayQueue<DelayItems> queue() {
