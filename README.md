@@ -10,6 +10,28 @@ https://oneship.yuque.com/platform/hosuys/rmv8to
 
 ### Cache 
 
++ 创建方法
+
+```
+    @Test
+    public void createComposeCache() {
+        CacheManager.createComposeCache("id",new ConcurrentHashMapCache("id"),new HashMapCache("id"));
+    }
+
+    @Test
+    public void createLocalCache() {
+        CacheManager.createLocalCache("id", CacheType.GUAVA);
+
+    }
+
+    @Test
+    public void createRedisCache() {
+        RedisTemplate redisTemplate=new RedisTemplate();
+        CacheManager.createRedisCache("id",redisTemplate);
+    }
+
+```
+
 #### HashMapCache 底层用的是HashMap存储
 
 ``java
