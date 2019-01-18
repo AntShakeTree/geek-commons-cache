@@ -58,6 +58,23 @@ public class CacheManager {
         return cache;
     }
 
+    public static com.geek.commons.cache.Cache createLocalCache(String id, CacheType cacheType, long defaultTime, TimeUnit timeUnit) {
+        if (cache(id) != null) {
+            return cache(id);
+        }
+        Cache cache;
+        switch (cacheType) {
+            case CONCURRENT:
+                cache = new ConcurrentHashMapCache(id, defaultTime, timeUnit);
+                break;
+            default:
+                cache = new HashMapCache(id, defaultTime, timeUnit);
+                break;
+        }
+        CACHE_MAP.put(id, cache);
+        return cache;
+    }
+
 
     public static com.geek.commons.cache.Cache createRedisCache(String id, RedisTemplate redisTemplate) {
         if (cache(id) != null && cache(id) instanceof RedisCache) {
@@ -67,6 +84,7 @@ public class CacheManager {
         CACHE_MAP.putIfAbsent(id, cache);
         return cache;
     }
+
 
     public static com.geek.commons.cache.Cache createComposeCache(String id, Cache... caches) {
         if (cache(id) != null && cache(id) instanceof ComposeCache) {
