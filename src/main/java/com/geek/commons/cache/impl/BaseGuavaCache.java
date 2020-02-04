@@ -144,6 +144,7 @@ public final class BaseGuavaCache implements Cache {
 //                        cache = cacheBuilder.build(CacheLoader.asyncReloading(CacheLoader.from((Key) -> defaultReFresh(BaseGuavaCache.this.valueWhenExpiredFunction)), refreshPool));
 
 //                        cache = cacheBuilder.build(CacheLoader.from(Key -> defaultReFresh(BaseGuavaCache.this.valueWhenExpiredFunction)));
+
                         cache = cacheBuilder.build(CacheLoader.from(Key -> fresh(Key)));
                     }
                     if (valueWhenExpiredFunction == null) {
@@ -241,6 +242,9 @@ public final class BaseGuavaCache implements Cache {
     }
 
     public <K, V> V fresh(K key) {
+        if (this.refreshParams != null) {
+            return (V) this.valueWhenExpiredFunction.apply(this.refreshParams);
+        }
         return (V) this.valueWhenExpiredFunction.apply(key);
     }
 }
