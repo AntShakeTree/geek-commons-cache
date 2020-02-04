@@ -50,7 +50,7 @@ public class HashMapCacheTest {
     public void refreshTest() throws InterruptedException {
 
         ConcurrentHashMapCache cache = new ConcurrentHashMapCache("id");
-        cache.setFunction(k->refresh((String) k));
+        cache.setRefresh(k->refresh((String) k));
         cache.put("1","1",1, TimeUnit.SECONDS);
         System.out.println("v: "+(String) cache.getValue("1"));
         Thread.sleep(2000);
