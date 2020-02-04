@@ -4,7 +4,6 @@ package com.geek.commons.cache.decorders;
 import com.geek.commons.cache.Cache;
 import com.geek.commons.cache.CacheException;
 import com.geek.commons.cache.CacheManager;
-import com.geek.commons.cache.enums.CacheType;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 
@@ -100,29 +99,24 @@ public class ComposeCache implements Cache {
         return caches.get(0).size();
     }
 
+    @Override
+    public Function refresh() {
+        return null;
+    }
+
+    @Override
+    public void setRefresh(Function function) {
+
+    }
+
     /**
      * Sets the set of parameters needed for the calculation
      *
      * @param o
      * @return
      */
-    @Override
-    public Object params(Object o) {
-        for (Cache cache : caches) {
-            cache.params(o);
-        }
-        return o;
-    }
 
-    @Override
-    public Function getFunction() {
-        return null;
-    }
 
-    @Override
-    public void setFunction(Function function) {
-
-    }
 
     public void remove(int index, Object key) {
         caches.get(index).remove(key);
@@ -132,6 +126,7 @@ public class ComposeCache implements Cache {
         return this.caches.get(index);
     }
 
+    @Override
     public <K, V> void putIfAbsent(K key, V value) {
         for (Cache cache : caches) {
             if (cache.getValue(key) == null) {

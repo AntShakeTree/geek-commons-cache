@@ -121,9 +121,10 @@ public class CacheManager {
                 case HASH:
                     if (fresh) {
                         ca = new HashMapCache(id, interval, timeUnit);
-                    } else
+                    } else{
                         ca = new HashMapCache(id);
-                    ca.setFunction(function);
+                    }
+                    ca.setRefresh(function);
                     break;
                 case GUAVA:
                     if (fresh) {
@@ -135,18 +136,19 @@ public class CacheManager {
                 case CONCURRENT:
                     if (fresh) {
                         ca = new ConcurrentHashMapCache(id, interval, timeUnit);
-                    } else
+                    } else{
                         ca = new ConcurrentHashMapCache(id);
-                    ca.setFunction(function);
+                    }
+                    ca.setRefresh(function);
                     break;
             }
             if (lru > 0) {
                 ca = new LruCache(ca, lru);
-                ca.setFunction(function);
+                ca.setRefresh(function);
             }
             if (cache.isLog()) {
                 ca = new LoggingCache(ca);
-                ca.setFunction(function);
+                ca.setRefresh(function);
             }
             CACHE_MAP.put(id, ca);
         }
@@ -185,7 +187,14 @@ public class CacheManager {
                         try {
                             delayItems = queue.take();
                             Object o = delayItems.getKey();
-                            CacheManager.cache(delayItems.getId()).remove(o);
+
+                            Cache cache = CacheManager.cache(delayItems.getId());
+                            if (cache.refresh() != null) {
+                                Object v = cache.refresh().apply(o);
+                                cache.put(o, v, delayItems.getDelayTime(), delayItems.getTimeUnit());
+                            } else {
+                                cache.remove(o);
+                            }
                         } catch (InterruptedException e) {
                             Thread.currentThread().interrupt();
                             throw new RuntimeException(e);

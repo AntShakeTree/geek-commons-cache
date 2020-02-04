@@ -6,8 +6,8 @@ package com.geek.commons.cache;
  * @date: 2018-12-28
  * @since: 1.0.0.0
  */
+
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
@@ -24,17 +24,22 @@ public class DelayItems implements Delayed {
     private final Object key;
     @Getter
     private String id;
-    public DelayItems id(String id){
-        this.id=id;
+
+    public DelayItems id(String id) {
+        this.id = id;
         return this;
     }
+
     @Getter
     private final long delayTime;
+    @Getter
+    private final TimeUnit timeUnit;
 
     public DelayItems(Object key, long delayTime, TimeUnit timeUnit) {
         this.key = key;
         this.delayTime = delayTime;
-        startTime = TimeUnit.MILLISECONDS.convert(delayTime,timeUnit) + System.currentTimeMillis();
+        this.timeUnit = timeUnit;
+        startTime = TimeUnit.MILLISECONDS.convert(delayTime, timeUnit) + System.currentTimeMillis();
     }
 
     @Override

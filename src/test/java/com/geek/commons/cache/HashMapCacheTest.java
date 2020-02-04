@@ -1,7 +1,10 @@
 package com.geek.commons.cache;
 
+import com.geek.commons.cache.impl.ConcurrentHashMapCache;
 import com.geek.commons.cache.impl.HashMapCache;
 import org.junit.Test;
+
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -41,6 +44,21 @@ public class HashMapCacheTest {
         cache.put("1", "1");
         cache.clear();
         assertNull(cache.getValue("1"));
+    }
+
+    @Test
+    public void refreshTest() throws InterruptedException {
+
+        ConcurrentHashMapCache cache = new ConcurrentHashMapCache("id");
+        cache.setFunction(k->refresh((String) k));
+        cache.put("1","1",1, TimeUnit.SECONDS);
+        System.out.println("v: "+(String) cache.getValue("1"));
+        Thread.sleep(2000);
+        System.out.println("rv:::::"+(String) cache.getValue("1"));
+
+    }
+    public String refresh(String key) {
+        return key+"======";
     }
 
     @Test

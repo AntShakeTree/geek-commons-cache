@@ -18,7 +18,6 @@ public interface Cache {
     public <K, V> V getValue(K key);
 
 
-
     public <K, V> void put(K key, V value);
 
     public default <K, V> void put(K key, V value, long times, TimeUnit timeUnit) {
@@ -41,21 +40,23 @@ public interface Cache {
      * @return
      */
     int size();
+//
+//    /**
+//     * Sets the set of parameters needed for the calculation
+//     *
+//     * @param o
+//     * @return
+//     */
+//    Object params(Object o);
 
-    /**
-     * Sets the set of parameters needed for the calculation
-     *
-     * @param o
-     * @return
-     */
-    Object params(Object o);
-    public Function getFunction();
+    public Function refresh();
 
-    public void setFunction(Function function);
+    public void setRefresh(Function function);
 
-    public default  <K, V> void putIfAbsent(K key, V value) {
-        if (getValue(key)==null){
-            this.put(key,value);
+
+    public default <K, V> void putIfAbsent(K key, V value) {
+        if (getValue(key) == null) {
+            this.put(key, value);
         }
     }
 }

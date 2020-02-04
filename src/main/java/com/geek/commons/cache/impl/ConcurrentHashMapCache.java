@@ -58,38 +58,9 @@ public class ConcurrentHashMapCache implements Cache {
 
     @Override
     public <K, V> V getValue(K key) {
-        V v = (V) this.concurrentMap.get(key);
-        if (v == null) {
-            synchronized (this) {
-                if (v == null) {
-                    v = (V) this.putIfSent(key);
-                }
-            }
-
-            return (V) this.concurrentMap.get(key);
-        } else {
-            return v;
-        }
+        return (V) this.concurrentMap.get(key);
     }
 
-    private <K> Object putIfSent(K key) {
-        Object re = apply();
-        if (re != null) {
-            if (fresh) {
-                this.put(key, re, this.defaultTimes, this.timeUnit);
-            } else {
-                this.put(key, re);
-            }
-            return re;
-        }
-        return null;
-    }
-
-    private Object apply() {
-        if (this.getFunction() != null)
-            return this.function.apply(refreshParams);
-        return null;
-    }
 
     @Override
     public <K, V> void put(K key, V value) {
@@ -99,6 +70,7 @@ public class ConcurrentHashMapCache implements Cache {
         }
     }
 
+    @Override
     public <K, V> void put(K key, V value, long times, TimeUnit timeUnit) {
         this.concurrentMap.put(key, value);
         queue().put(new DelayItems(key, times, timeUnit).id(id));
@@ -132,19 +104,14 @@ public class ConcurrentHashMapCache implements Cache {
 
     private Function function;
 
-    @Override
-    public Object params(Object o) {
-        this.refreshParams = o;
-        return refreshParams;
-    }
 
     @Override
-    public Function getFunction() {
+    public Function refresh() {
         return this.function;
     }
 
     @Override
-    public void setFunction(Function function) {
+    public void setRefresh(Function function) {
         this.function = function;
     }
 
@@ -172,8 +139,13 @@ public class ConcurrentHashMapCache implements Cache {
         return getId().hashCode();
     }
 
+    @Override
     public <K, V> void putIfAbsent(K k, V v) {
         this.concurrentMap.putIfAbsent(k, v);
+        if (defaultTimes > 0) {
+            queue().put(new DelayItems(k, defaultTimes, timeUnit).id(id));
+        }
+
     }
 
 }

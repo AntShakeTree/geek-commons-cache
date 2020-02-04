@@ -91,20 +91,16 @@ public final class BaseGuavaCache implements Cache {
         return this.maxSize;
     }
 
-    @Override
-    public Object params(Object o) {
-        this.refreshParams = o;
-        return refreshParams;
-    }
+
 
     @Override
-    public java.util.function.Function getFunction() {
+    public java.util.function.Function refresh() {
         return this.valueWhenExpiredFunction;
     }
 
     @Override
-    public void setFunction(java.util.function.Function function) {
-        this.defaultReFresh(function);
+    public void setRefresh(java.util.function.Function function) {
+//   no support
     }
 
     @Override
@@ -235,11 +231,7 @@ public final class BaseGuavaCache implements Cache {
         return getId().hashCode();
     }
 
-    public Object defaultReFresh(java.util.function.Function function) {
 
-
-        return function.apply(BaseGuavaCache.this.refreshParams);
-    }
 
     public <K, V> V fresh(K key) {
         if (this.refreshParams != null) {
