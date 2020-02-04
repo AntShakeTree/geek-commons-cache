@@ -104,7 +104,7 @@ public final class BaseGuavaCache implements Cache {
 
     @Override
     public void setFunction(java.util.function.Function function) {
-
+        this.defaultReFresh(function);
     }
 
     @Override
@@ -143,7 +143,8 @@ public final class BaseGuavaCache implements Cache {
                     if (valueWhenExpiredFunction != null) {
 //                        cache = cacheBuilder.build(CacheLoader.asyncReloading(CacheLoader.from((Key) -> defaultReFresh(BaseGuavaCache.this.valueWhenExpiredFunction)), refreshPool));
 
-                        cache = cacheBuilder.build(CacheLoader.from((Key) -> defaultReFresh(BaseGuavaCache.this.valueWhenExpiredFunction)));
+//                        cache = cacheBuilder.build(CacheLoader.from(Key -> defaultReFresh(BaseGuavaCache.this.valueWhenExpiredFunction)));
+                        cache = cacheBuilder.build(CacheLoader.from(Key -> fresh(Key)));
                     }
                     if (valueWhenExpiredFunction == null) {
                         cache = CacheBuilder.newBuilder().build();
@@ -237,5 +238,9 @@ public final class BaseGuavaCache implements Cache {
 
 
         return function.apply(BaseGuavaCache.this.refreshParams);
+    }
+
+    public <K, V> V fresh(K key) {
+        return (V) this.valueWhenExpiredFunction.apply(key);
     }
 }

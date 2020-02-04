@@ -73,7 +73,6 @@ public class RedisCache implements Cache {
     @Override
     public <K, V> void put(K key, V value, long times, TimeUnit timeUnit) {
         redisTemplate.opsForValue().set(key(key), value, times, timeUnit);
-
     }
 
     /**

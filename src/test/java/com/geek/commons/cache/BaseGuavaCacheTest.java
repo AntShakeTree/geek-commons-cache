@@ -38,9 +38,11 @@ public class BaseGuavaCacheTest {
 
     @Test
     public void autoFresh() throws InterruptedException {
-        BaseGuavaCache baseGuavaCache2 = BaseGuavaCache.build("id", 10, (String k) -> refreshKey(k), 100, TimeUnit.SECONDS, 5, TimeUnit.SECONDS);
-
-        String a=baseGuavaCache2.getValue("2");
+        BaseGuavaCache baseGuavaCache2 = BaseGuavaCache.build("id", 10, (String k) -> refreshKey(k), 1, TimeUnit.SECONDS, 5, TimeUnit.SECONDS);
+        baseGuavaCache2.put("1","1");
+        Thread.sleep(2000);
+        String a=baseGuavaCache2.getValue("1");
+        System.out.println(a);
         String a2=baseGuavaCache2.getValue("2");
 //        Thread.sleep(2000);
 //        String a2=baseGuavaCache2.getValue("2");
@@ -58,9 +60,6 @@ public class BaseGuavaCacheTest {
     }
 
     private String refreshKey(String key) {
-//        if (key==null){
-//            return null;
-//        }
-        return null;
+        return key+" ===111";
     }
 }

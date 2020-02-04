@@ -4,6 +4,7 @@ package com.geek.commons.cache.decorders;
 import com.geek.commons.cache.Cache;
 import com.geek.commons.cache.CacheException;
 import com.geek.commons.cache.CacheManager;
+import com.geek.commons.cache.enums.CacheType;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 
@@ -138,4 +139,6 @@ public class ComposeCache implements Cache {
             }
         }
     }
+
+
 }
