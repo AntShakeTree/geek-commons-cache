@@ -63,6 +63,16 @@ public class ComposeCache implements Cache {
     }
 
     @Override
+    public void args(Object... params) {
+
+    }
+
+    @Override
+    public Object[] args() {
+        return new Object[0];
+    }
+
+    @Override
     public <K, V> void put(K key, V value) {
         for (Cache cache : caches) {
             cache.put(key, value);
@@ -109,14 +119,6 @@ public class ComposeCache implements Cache {
 
     }
 
-    /**
-     * Sets the set of parameters needed for the calculation
-     *
-     * @param o
-     * @return
-     */
-
-
 
     public void remove(int index, Object key) {
         caches.get(index).remove(key);
@@ -133,6 +135,11 @@ public class ComposeCache implements Cache {
                 this.put(key, value);
             }
         }
+    }
+
+    @Override
+    public boolean contain(Object key) {
+        return this.getValue(key) != null;
     }
 
 

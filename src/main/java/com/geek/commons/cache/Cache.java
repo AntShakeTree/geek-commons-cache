@@ -17,6 +17,10 @@ public interface Cache {
 
     public <K, V> V getValue(K key);
 
+    void args(Object... params);
+
+    Object[] args();
+
 
     public <K, V> void put(K key, V value);
 
@@ -59,4 +63,6 @@ public interface Cache {
             this.put(key, value);
         }
     }
+
+    boolean contain(Object key);
 }

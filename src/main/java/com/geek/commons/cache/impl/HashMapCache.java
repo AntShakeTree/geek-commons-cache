@@ -58,6 +58,18 @@ public class HashMapCache implements Cache {
 
     }
 
+    private Object[] params;
+
+    @Override
+    public void args(Object... params) {
+        this.params = params;
+    }
+
+    @Override
+    public Object[] args() {
+        return params;
+    }
+
 
     @Override
     public <K, V> void put(K key, V value, long times, TimeUnit timeUnit) {
@@ -132,5 +144,10 @@ public class HashMapCache implements Cache {
     @Override
     public void setRefresh(Function function) {
         this.function = function;
+    }
+
+    @Override
+    public boolean contain(Object key) {
+        return this.hashMap.containsKey(key);
     }
 }

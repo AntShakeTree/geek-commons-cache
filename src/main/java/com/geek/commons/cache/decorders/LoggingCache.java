@@ -44,6 +44,16 @@ public class LoggingCache implements Cache {
     }
 
     @Override
+    public void args(Object... params) {
+        delegate.args(params);
+    }
+
+    @Override
+    public Object[] args() {
+        return delegate.args();
+    }
+
+    @Override
     public <K, V> void put(K key, V value) {
         delegate.put(key, value);
     }
@@ -84,6 +94,11 @@ public class LoggingCache implements Cache {
     @Override
     public void setRefresh(Function function) {
         delegate.setRefresh(function);
+    }
+
+    @Override
+    public boolean contain(Object key) {
+        return this.delegate.contain(key);
     }
 
     private double getHitRatio() {

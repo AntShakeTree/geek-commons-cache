@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
  */
 public final class BaseGuavaCache implements Cache {
 
-    private Object refreshParams;
+    private Object[] refreshParams;
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     private String id;
@@ -92,7 +92,6 @@ public final class BaseGuavaCache implements Cache {
     }
 
 
-
     @Override
     public java.util.function.Function refresh() {
         return this.valueWhenExpiredFunction;
@@ -101,6 +100,11 @@ public final class BaseGuavaCache implements Cache {
     @Override
     public void setRefresh(java.util.function.Function function) {
 //   no support
+    }
+
+    @Override
+    public boolean contain(Object key) {
+        return this.getValue(key) != null;
     }
 
     @Override
@@ -208,6 +212,16 @@ public final class BaseGuavaCache implements Cache {
     }
 
     @Override
+    public void args(Object... params) {
+        this.refreshParams = params;
+    }
+
+    @Override
+    public Object[] args() {
+        return refreshParams;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (getId() == null) {
             throw new CacheException("Cache instances require an ID.");
@@ -230,7 +244,6 @@ public final class BaseGuavaCache implements Cache {
         }
         return getId().hashCode();
     }
-
 
 
     public <K, V> V fresh(K key) {

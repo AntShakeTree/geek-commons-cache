@@ -23,19 +23,18 @@ public class ConcurrentHashMapCache implements Cache {
     private final String id;
     private final long defaultTimes;
     private final TimeUnit timeUnit;
-    private final boolean fresh;
+
 
     public ConcurrentHashMapCache(String id) {
         this.id = id;
         concurrentMap = new ConcurrentHashMap();
         defaultTimes = 0;
         timeUnit = TimeUnit.SECONDS;
-        fresh = false;
+
         CacheManager.put(id, this);
     }
 
     public ConcurrentHashMapCache(String id, long defaultTimes, TimeUnit timeUnit) {
-        this.fresh = true;
         this.id = id;
         concurrentMap = new ConcurrentHashMap();
 
@@ -59,6 +58,18 @@ public class ConcurrentHashMapCache implements Cache {
     @Override
     public <K, V> V getValue(K key) {
         return (V) this.concurrentMap.get(key);
+    }
+
+    private Object[] params;
+
+    @Override
+    public void args(Object... params) {
+        this.params = params;
+    }
+
+    @Override
+    public Object[] args() {
+        return params;
     }
 
 
@@ -146,6 +157,11 @@ public class ConcurrentHashMapCache implements Cache {
             queue().put(new DelayItems(k, defaultTimes, timeUnit).id(id));
         }
 
+    }
+
+    @Override
+    public boolean contain(Object key) {
+        return this.concurrentMap.containsKey(key);
     }
 
 }

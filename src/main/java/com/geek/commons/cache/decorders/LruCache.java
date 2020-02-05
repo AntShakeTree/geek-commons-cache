@@ -17,7 +17,7 @@ public class LruCache implements Cache {
     private final Cache delegate;
     private Map<Object, Object> keyMap;
     private Object eldestKey;
-    private Function function;
+
 
 
     public LruCache(Cache delegate, int maxSize) {
@@ -45,6 +45,11 @@ public class LruCache implements Cache {
     public void setRefresh(Function function) {
 
         delegate.setRefresh(function);
+    }
+
+    @Override
+    public boolean contain(Object key) {
+        return delegate.contain(key);
     }
 
     public void setSize(final int size) {
@@ -75,6 +80,16 @@ public class LruCache implements Cache {
             return v;
         }
         return delegate.getValue(key);
+    }
+
+    @Override
+    public void args(Object... params) {
+        delegate.args(params);
+    }
+
+    @Override
+    public Object[] args() {
+        return delegate.args();
     }
 
     @Override

@@ -2,10 +2,13 @@ package com.geek.commons.cache.impl;
 
 import com.geek.commons.cache.Cache;
 import com.geek.commons.cache.CacheManager;
+import com.geek.commons.cache.DelayItems;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
+
+import static com.geek.commons.cache.CacheManager.queue;
 
 /**
  * @program: geek-commons-cache
@@ -15,7 +18,7 @@ import java.util.function.Function;
  */
 public class RedisCache implements Cache {
 
-    private Object refreshParams;
+    private Object[] refreshParams;
     private final RedisTemplate<String, Object> redisTemplate;
     private final long defaultFreshTime;
     private final TimeUnit timeUnit;
@@ -48,18 +51,39 @@ public class RedisCache implements Cache {
 
     @Override
     public <K, V> V getValue(K key) {
-        return (V) redisTemplate.opsForValue().get(key(key));
+        V v = (V) redisTemplate.opsForValue().get(key(key));
+//        if (v == null && this.function != null) {
+//            if (this.refreshParams != null && this.refreshParams.length > 0) {
+//                this.function.apply(this.refreshParams);
+//            } else {
+//                this.function.apply(key);
+//            }
+//        }
+        return v;
+    }
+
+    @Override
+    public void args(Object... params) {
+        this.refreshParams = params;
+    }
+
+    @Override
+    public Object[] args() {
+        return refreshParams;
     }
 
 
     @Override
     public <K, V> void put(K key, V value) {
         this.put(key, value, defaultFreshTime, timeUnit);
+        queue().put(new DelayItems(key, defaultFreshTime, timeUnit).id(id));
+
     }
 
     @Override
     public <K, V> void put(K key, V value, long times, TimeUnit timeUnit) {
         redisTemplate.opsForValue().set(key(key), value, times, timeUnit);
+        queue().put(new DelayItems(key, times, timeUnit).id(id));
     }
 
     /**
@@ -107,6 +131,11 @@ public class RedisCache implements Cache {
     @Override
     public void setRefresh(Function function) {
         this.function = function;
+    }
+
+    @Override
+    public boolean contain(Object key) {
+        return this.getValue(key)==null;
     }
 
     private String key(Object key) {

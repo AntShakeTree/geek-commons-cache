@@ -189,6 +189,9 @@ public class CacheManager {
                             Object o = delayItems.getKey();
 
                             Cache cache = CacheManager.cache(delayItems.getId());
+                            if (!cache.contain(o)){
+
+                            }
                             if (cache.refresh() != null) {
                                 Object v = cache.refresh().apply(o);
                                 cache.put(o, v, delayItems.getDelayTime(), delayItems.getTimeUnit());
