@@ -43,15 +43,6 @@ public class LoggingCache implements Cache {
         return v;
     }
 
-    @Override
-    public void args(Object... params) {
-        delegate.args(params);
-    }
-
-    @Override
-    public Object[] args() {
-        return delegate.args();
-    }
 
     @Override
     public <K, V> void put(K key, V value) {
@@ -87,13 +78,13 @@ public class LoggingCache implements Cache {
 
 
     @Override
-    public Function refresh() {
-        return delegate.refresh();
+    public Function refreshFu() {
+        return delegate.refreshFu();
     }
 
     @Override
-    public void setRefresh(Function function) {
-        delegate.setRefresh(function);
+    public void setRefreshFu(Function function) {
+        delegate.setRefreshFu(function);
     }
 
     @Override

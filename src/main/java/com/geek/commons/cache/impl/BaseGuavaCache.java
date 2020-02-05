@@ -93,12 +93,12 @@ public final class BaseGuavaCache implements Cache {
 
 
     @Override
-    public java.util.function.Function refresh() {
+    public java.util.function.Function refreshFu() {
         return this.valueWhenExpiredFunction;
     }
 
     @Override
-    public void setRefresh(java.util.function.Function function) {
+    public void setRefreshFu(java.util.function.Function function) {
 //   no support
     }
 
@@ -110,6 +110,7 @@ public final class BaseGuavaCache implements Cache {
     @Override
     public <K, V> void put(K key, V value) {
         getCache().put(key, value);
+
     }
 
     private final java.util.function.Function valueWhenExpiredFunction;
@@ -141,11 +142,10 @@ public final class BaseGuavaCache implements Cache {
                         cacheBuilder = cacheBuilder.expireAfterWrite(expireDuration, expireTimeunit);
                     }
                     if (valueWhenExpiredFunction != null) {
-//                        cache = cacheBuilder.build(CacheLoader.asyncReloading(CacheLoader.from((Key) -> defaultReFresh(BaseGuavaCache.this.valueWhenExpiredFunction)), refreshPool));
 
-//                        cache = cacheBuilder.build(CacheLoader.from(Key -> defaultReFresh(BaseGuavaCache.this.valueWhenExpiredFunction)));
 
-                        cache = cacheBuilder.build(CacheLoader.from(Key -> fresh(Key)));
+                            cache = cacheBuilder.build(CacheLoader.from(Key -> refresh(BaseGuavaCache.this.valueWhenExpiredFunction, Key)));
+
                     }
                     if (valueWhenExpiredFunction == null) {
                         cache = CacheBuilder.newBuilder().build();
@@ -211,15 +211,7 @@ public final class BaseGuavaCache implements Cache {
         }
     }
 
-    @Override
-    public void args(Object... params) {
-        this.refreshParams = params;
-    }
 
-    @Override
-    public Object[] args() {
-        return refreshParams;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -247,9 +239,9 @@ public final class BaseGuavaCache implements Cache {
 
 
     public <K, V> V fresh(K key) {
-        if (this.refreshParams != null) {
-            return (V) this.valueWhenExpiredFunction.apply(this.refreshParams);
-        }
+
         return (V) this.valueWhenExpiredFunction.apply(key);
     }
+
+
 }

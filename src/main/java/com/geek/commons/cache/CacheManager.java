@@ -124,7 +124,7 @@ public class CacheManager {
                     } else {
                         ca = new HashMapCache(id);
                     }
-                    ca.setRefresh(function);
+                    ca.setRefreshFu(function);
                     break;
                 case GUAVA:
                     if (fresh) {
@@ -139,16 +139,16 @@ public class CacheManager {
                     } else {
                         ca = new ConcurrentHashMapCache(id);
                     }
-                    ca.setRefresh(function);
+                    ca.setRefreshFu(function);
                     break;
             }
             if (lru > 0) {
                 ca = new LruCache(ca, lru);
-                ca.setRefresh(function);
+                ca.setRefreshFu(function);
             }
             if (cache.isLog()) {
                 ca = new LoggingCache(ca);
-                ca.setRefresh(function);
+                ca.setRefreshFu(function);
             }
             CACHE_MAP.put(id, ca);
         }
@@ -190,19 +190,21 @@ public class CacheManager {
 
                             Cache cache = CacheManager.cache(delayItems.getId());
                             if (cache.contain(o)) {
-                                if (cache.refresh() != null) {
-                                    Object v = cache.refresh().apply(o);
-                                    cache.put(o, v, delayItems.getDelayTime(), delayItems.getTimeUnit());
-                                } else {
-                                    cache.remove(o);
-                                }
+
+                                Object v = cache.refresh(cache.refreshFu(), o);
+                                cache.put(o, v, delayItems.getDelayTime(), delayItems.getTimeUnit());
+
+                            } else {
+                                cache.remove(o);
                             }
+
                         } catch (InterruptedException e) {
                             Thread.currentThread().interrupt();
                             throw new RuntimeException(e);
                         }
                     }
                 }
+
         );
     }
 

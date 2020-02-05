@@ -62,16 +62,6 @@ public class RedisCache implements Cache {
         return v;
     }
 
-    @Override
-    public void args(Object... params) {
-        this.refreshParams = params;
-    }
-
-    @Override
-    public Object[] args() {
-        return refreshParams;
-    }
-
 
     @Override
     public <K, V> void put(K key, V value) {
@@ -124,18 +114,18 @@ public class RedisCache implements Cache {
     private Function function;
 
     @Override
-    public Function refresh() {
+    public Function refreshFu() {
         return function;
     }
 
     @Override
-    public void setRefresh(Function function) {
+    public void setRefreshFu(Function function) {
         this.function = function;
     }
 
     @Override
     public boolean contain(Object key) {
-        return this.getValue(key)==null;
+        return this.getValue(key) == null;
     }
 
     private String key(Object key) {

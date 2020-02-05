@@ -60,15 +60,7 @@ public class HashMapCache implements Cache {
 
     private Object[] params;
 
-    @Override
-    public void args(Object... params) {
-        this.params = params;
-    }
 
-    @Override
-    public Object[] args() {
-        return params;
-    }
 
 
     @Override
@@ -137,12 +129,12 @@ public class HashMapCache implements Cache {
     }
 
     @Override
-    public Function refresh() {
+    public Function refreshFu() {
         return function;
     }
 
     @Override
-    public void setRefresh(Function function) {
+    public void setRefreshFu(Function function) {
         this.function = function;
     }
 

@@ -46,7 +46,7 @@ public class CacheProxy {
     @Around(value = "cachePointcut()&&@annotation(cache)", argNames = "proceedingJoinPoint,cache")
     public Object doAccessCheck(final ProceedingJoinPoint proceedingJoinPoint, Cache cache) throws Throwable {
         MethodCacheResolver mapper = MethodCacheResolver.create(proceedingJoinPoint);
-        com.geek.commons.cache.Cache cac = mapper.cache((o) -> put(proceedingJoinPoint, o), cache);
+        com.geek.commons.cache.Cache cac = mapper.cache((o) -> put(proceedingJoinPoint, (Object[]) o), cache);
         Object o = cac.getValue(mapper.cacheKey());
 
 
@@ -59,16 +59,17 @@ public class CacheProxy {
         if (o != null) {
 
             return o;
-        }else{
-            Object v=proceedingJoinPoint.proceed();
-            cac.put(mapper.cacheKey(),v);
+        } else {
+            Object v = proceedingJoinPoint.proceed();
+            cac.args(mapper.cacheKey(), mapper.getArgs());
+            cac.put(mapper.cacheKey(), v);
             return v;
         }
     }
 
-    private Object put(ProceedingJoinPoint proceedingJoinPoint, Object o) {
+    private Object put(ProceedingJoinPoint proceedingJoinPoint, Object[] o) {
         try {
-            Object result = proceedingJoinPoint.proceed((Object[]) o);
+            Object result = proceedingJoinPoint.proceed(o);
             return result;
         } catch (Throwable throwable) {
             CacheProxy.this.throwableThreadLocal.set(throwable);

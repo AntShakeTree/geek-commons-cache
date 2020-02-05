@@ -62,15 +62,7 @@ public class ComposeCache implements Cache {
         return null;
     }
 
-    @Override
-    public void args(Object... params) {
 
-    }
-
-    @Override
-    public Object[] args() {
-        return new Object[0];
-    }
 
     @Override
     public <K, V> void put(K key, V value) {
@@ -110,12 +102,12 @@ public class ComposeCache implements Cache {
     }
 
     @Override
-    public Function refresh() {
+    public Function refreshFu() {
         return null;
     }
 
     @Override
-    public void setRefresh(Function function) {
+    public void setRefreshFu(Function function) {
 
     }
 

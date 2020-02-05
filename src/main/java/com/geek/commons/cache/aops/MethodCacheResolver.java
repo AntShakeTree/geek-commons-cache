@@ -6,6 +6,7 @@ import com.geek.commons.cache.CacheManager;
 import com.geek.commons.cache.annotations.Param;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+import lombok.Getter;
 import org.aspectj.lang.ProceedingJoinPoint;
 
 import java.lang.annotation.Annotation;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
  */
 class MethodCacheResolver {
     private final ProceedingJoinPoint proceedingJoinPoint;
+    @Getter
     private Object[] args;
     private final Method method;
     private Cache cache;
@@ -42,7 +44,7 @@ class MethodCacheResolver {
 
     public static MethodCacheResolver create(ProceedingJoinPoint proceedingJoinPoint) {
         if (methodMethodCacheMapperMap.get(id(proceedingJoinPoint)) != null) {
-            MethodCacheResolver resolver=methodMethodCacheMapperMap.get(id(proceedingJoinPoint)).args(proceedingJoinPoint.getArgs());
+            MethodCacheResolver resolver = methodMethodCacheMapperMap.get(id(proceedingJoinPoint)).args(proceedingJoinPoint.getArgs());
 
             return resolver;
         } else {
@@ -73,6 +75,7 @@ class MethodCacheResolver {
     public Cache cache(Function function, com.geek.commons.cache.annotations.Cache cache) {
         com.geek.commons.cache.Cache ca = CacheManager.createCache(id, cache, function);
 //        ca.params(args);
+
         this.cache = ca;
         return this.cache;
     }

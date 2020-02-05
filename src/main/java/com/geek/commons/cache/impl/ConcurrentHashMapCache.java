@@ -60,21 +60,12 @@ public class ConcurrentHashMapCache implements Cache {
         return (V) this.concurrentMap.get(key);
     }
 
-    private Object[] params;
-
-    @Override
-    public void args(Object... params) {
-        this.params = params;
-    }
-
-    @Override
-    public Object[] args() {
-        return params;
-    }
-
 
     @Override
     public <K, V> void put(K key, V value) {
+        if (value == null) {
+            return;
+        }
         this.concurrentMap.put(key, value);
         if (defaultTimes > 0) {
             queue().put(new DelayItems(key, defaultTimes, timeUnit).id(id));
@@ -117,12 +108,12 @@ public class ConcurrentHashMapCache implements Cache {
 
 
     @Override
-    public Function refresh() {
+    public Function refreshFu() {
         return this.function;
     }
 
     @Override
-    public void setRefresh(Function function) {
+    public void setRefreshFu(Function function) {
         this.function = function;
     }
 

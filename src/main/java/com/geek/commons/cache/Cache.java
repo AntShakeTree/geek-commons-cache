@@ -1,5 +1,7 @@
 package com.geek.commons.cache;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
@@ -10,6 +12,8 @@ import java.util.function.Function;
  */
 public interface Cache {
 
+    Map<Object, Object> paramsMap = new ConcurrentHashMap<>();
+
     /**
      * @return The identifier of this cache
      */
@@ -17,9 +21,17 @@ public interface Cache {
 
     public <K, V> V getValue(K key);
 
-    void args(Object... params);
+    default void args(Object key, Object[] params) {
+        paramsMap.put(key, params);
+    }
 
-    Object[] args();
+    default Object args(Object key) {
+        if (paramsMap.get(key) == null) {
+            return key;
+        } else {
+            return paramsMap.get(key);
+        }
+    }
 
 
     public <K, V> void put(K key, V value);
@@ -53,15 +65,20 @@ public interface Cache {
 //     */
 //    Object params(Object o);
 
-    public Function refresh();
+    public Function refreshFu();
 
-    public void setRefresh(Function function);
+    public void setRefreshFu(Function function);
 
 
     public default <K, V> void putIfAbsent(K key, V value) {
         if (getValue(key) == null) {
             this.put(key, value);
         }
+    }
+
+    public default Object refresh(java.util.function.Function function, Object key) {
+
+        return function.apply(paramsMap.get(key));
     }
 
     boolean contain(Object key);
