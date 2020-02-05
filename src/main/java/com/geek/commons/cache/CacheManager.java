@@ -158,7 +158,7 @@ public class CacheManager {
 
     public static Object createCacheKey(List<Object> args) {
         long i = 0;
-        if (args.size() == 1 && args.get(0).getClass().isPrimitive()) {
+        if (args.size() == 1) {
             return args.get(0);
         }
         for (Object ar : args) {
