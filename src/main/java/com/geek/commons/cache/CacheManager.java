@@ -121,7 +121,7 @@ public class CacheManager {
                 case HASH:
                     if (fresh) {
                         ca = new HashMapCache(id, interval, timeUnit);
-                    } else{
+                    } else {
                         ca = new HashMapCache(id);
                     }
                     ca.setRefresh(function);
@@ -136,7 +136,7 @@ public class CacheManager {
                 case CONCURRENT:
                     if (fresh) {
                         ca = new ConcurrentHashMapCache(id, interval, timeUnit);
-                    } else{
+                    } else {
                         ca = new ConcurrentHashMapCache(id);
                     }
                     ca.setRefresh(function);
@@ -189,14 +189,13 @@ public class CacheManager {
                             Object o = delayItems.getKey();
 
                             Cache cache = CacheManager.cache(delayItems.getId());
-                            if (!cache.contain(o)){
-
-                            }
-                            if (cache.refresh() != null) {
-                                Object v = cache.refresh().apply(o);
-                                cache.put(o, v, delayItems.getDelayTime(), delayItems.getTimeUnit());
-                            } else {
-                                cache.remove(o);
+                            if (cache.contain(o)) {
+                                if (cache.refresh() != null) {
+                                    Object v = cache.refresh().apply(o);
+                                    cache.put(o, v, delayItems.getDelayTime(), delayItems.getTimeUnit());
+                                } else {
+                                    cache.remove(o);
+                                }
                             }
                         } catch (InterruptedException e) {
                             Thread.currentThread().interrupt();
