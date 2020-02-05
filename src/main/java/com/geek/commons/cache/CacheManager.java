@@ -157,10 +157,13 @@ public class CacheManager {
 
 
     public static Object createCacheKey(List<Object> args) {
-        int i = 0;
+        long i = 0;
+        if (args.size() == 1 && args.get(0).getClass().isPrimitive()) {
+            return args.get(0);
+        }
         for (Object ar : args) {
             if (ar.getClass().isArray()) {
-                i ^= Arrays.hashCode((Object[]) ar);
+                i ^= Arrays.deepHashCode((Object[]) ar);
             } else {
                 if (i == 0) {
                     i = ar.hashCode();
@@ -170,7 +173,6 @@ public class CacheManager {
             }
         }
         return i;
-
     }
 
     private static final DelayQueue<DelayItems> queue = new DelayQueue<>();
