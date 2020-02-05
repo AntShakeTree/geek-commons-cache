@@ -48,6 +48,8 @@ public class CacheProxy {
         MethodCacheResolver mapper = MethodCacheResolver.create(proceedingJoinPoint);
         com.geek.commons.cache.Cache cac = mapper.cache((o) -> put(proceedingJoinPoint, o), cache);
         Object o = cac.getValue(mapper.cacheKey());
+
+
         /**
          * 必须要在执行方法后面,顺序不能乱。
          */
@@ -55,9 +57,13 @@ public class CacheProxy {
             throw throwableThreadLocal.get();
         }
         if (o != null) {
+
             return o;
+        }else{
+            Object v=proceedingJoinPoint.proceed();
+            cac.put(mapper.cacheKey(),v);
+            return v;
         }
-        return proceedingJoinPoint.proceed();
     }
 
     private Object put(ProceedingJoinPoint proceedingJoinPoint, Object o) {
