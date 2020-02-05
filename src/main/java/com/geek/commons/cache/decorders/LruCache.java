@@ -18,7 +18,7 @@ public class LruCache implements Cache {
     private Map<Object, Object> keyMap;
     private Object eldestKey;
     private Function function;
-    
+
 
     public LruCache(Cache delegate, int maxSize) {
         this.delegate = delegate;
@@ -38,13 +38,13 @@ public class LruCache implements Cache {
 
     @Override
     public Function refresh() {
-        return function;
+        return delegate.refresh();
     }
 
     @Override
     public void setRefresh(Function function) {
-        this.function = function;
-        delegate.setRefresh(null);
+
+        delegate.setRefresh(function);
     }
 
     public void setSize(final int size) {

@@ -48,22 +48,9 @@ public class RedisCache implements Cache {
 
     @Override
     public <K, V> V getValue(K key) {
-        V v = (V) redisTemplate.opsForValue().get(key(key));
-        if (v != null) {
-            return v;
-        } else {
-            Object re = apply();
-            if (re != null)
-                this.put(key, re);
-            return (V) redisTemplate.opsForValue().get(key(key));
-        }
+        return (V) redisTemplate.opsForValue().get(key(key));
     }
 
-    private Object apply() {
-        if (this.getFunction() != null)
-            return this.function.apply(refreshParams);
-        return null;
-    }
 
     @Override
     public <K, V> void put(K key, V value) {
@@ -108,21 +95,17 @@ public class RedisCache implements Cache {
      * @param o
      * @return
      */
-    @Override
-    public Object params(Object o) {
-        this.refreshParams = 0;
-        return refreshParams;
-    }
+
 
     private Function function;
 
     @Override
-    public Function getFunction() {
+    public Function refresh() {
         return function;
     }
 
     @Override
-    public void setFunction(Function function) {
+    public void setRefresh(Function function) {
         this.function = function;
     }
 

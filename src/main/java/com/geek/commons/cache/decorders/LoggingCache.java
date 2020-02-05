@@ -75,19 +75,15 @@ public class LoggingCache implements Cache {
         return this.delegate.size();
     }
 
+
     @Override
-    public Object params(Object o) {
-        return this.delegate.params(o);
+    public Function refresh() {
+        return delegate.refresh();
     }
 
     @Override
-    public Function getFunction() {
-        return delegate.getFunction();
-    }
-
-    @Override
-    public void setFunction(Function function) {
-        delegate.setFunction(function);
+    public void setRefresh(Function function) {
+        delegate.setRefresh(function);
     }
 
     private double getHitRatio() {

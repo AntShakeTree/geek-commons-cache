@@ -72,7 +72,7 @@ class MethodCacheResolver {
 
     public Cache cache(Function function, com.geek.commons.cache.annotations.Cache cache) {
         com.geek.commons.cache.Cache ca = CacheManager.createCache(id, cache, function);
-        ca.params(args);
+//        ca.params(args);
         this.cache = ca;
         return this.cache;
     }
