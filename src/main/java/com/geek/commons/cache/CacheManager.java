@@ -192,10 +192,10 @@ public class CacheManager {
 
                             Cache cache = CacheManager.cache(delayItems.getId());
                             if (cache.contain(o)) {
-
-                                Object v = cache.refresh(cache.refreshFu(), o);
-                                cache.put(o, v, delayItems.getDelayTime(), delayItems.getTimeUnit());
-
+                                if (cache.refreshFu() != null) {
+                                    Object v = cache.refresh(cache.refreshFu(), o);
+                                    cache.put(o, v, delayItems.getDelayTime(), delayItems.getTimeUnit());
+                                }
                             } else {
                                 cache.remove(o);
                             }
