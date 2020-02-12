@@ -6,7 +6,7 @@
     <groupId>com.geek</groupId>
     <artifactId>geek-commons-cache</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.0.26</version>
+    <version>1.0.0.28</version>
     <name>geek-commons-cache</name>
     <url>http://maven.apache.org</url>
     <properties>
