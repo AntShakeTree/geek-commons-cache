@@ -77,8 +77,10 @@ public interface Cache {
     }
 
     public default Object refresh(java.util.function.Function function, Object key) {
-
-        return function.apply(paramsMap.get(key));
+        if (function != null) {
+            return function.apply(paramsMap.get(key));
+        }
+        return null;
     }
 
     boolean contain(Object key);
