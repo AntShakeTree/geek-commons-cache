@@ -58,7 +58,7 @@ public class HashMapCache implements Cache {
 
     }
 
-    private Object[] params;
+
 
 
 

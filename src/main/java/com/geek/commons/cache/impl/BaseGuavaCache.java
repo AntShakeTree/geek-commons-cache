@@ -23,7 +23,6 @@ import java.util.concurrent.TimeUnit;
  */
 public final class BaseGuavaCache implements Cache {
 
-    private Object[] refreshParams;
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     private String id;

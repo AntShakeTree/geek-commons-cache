@@ -18,7 +18,7 @@ import static com.geek.commons.cache.CacheManager.queue;
  */
 public class RedisCache implements Cache {
 
-    private Object[] refreshParams;
+
     private final RedisTemplate<String, Object> redisTemplate;
     private final long defaultFreshTime;
     private final TimeUnit timeUnit;
@@ -52,13 +52,6 @@ public class RedisCache implements Cache {
     @Override
     public <K, V> V getValue(K key) {
         V v = (V) redisTemplate.opsForValue().get(key(key));
-//        if (v == null && this.function != null) {
-//            if (this.refreshParams != null && this.refreshParams.length > 0) {
-//                this.function.apply(this.refreshParams);
-//            } else {
-//                this.function.apply(key);
-//            }
-//        }
         return v;
     }
 
@@ -81,7 +74,7 @@ public class RedisCache implements Cache {
      */
     @Override
     public void clear() {
-
+        redisTemplate.delete(redisTemplate.keys(id));
     }
 
     /**
@@ -89,7 +82,6 @@ public class RedisCache implements Cache {
      */
     @Override
     public void remove(Object key) {
-//        redisTemplate.opsForValue().set(id + ":" + key.toString(), 1, 1, TimeUnit.NANOSECONDS);
         redisTemplate.delete(id + ":" + key.toString());
     }
 
