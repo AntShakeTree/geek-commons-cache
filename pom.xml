@@ -12,7 +12,7 @@
     <properties>
         <jmh.version>1.14.1</jmh.version>
         <assertj.version>3.11.1</assertj.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
         <build.source.encoding>UTF-8</build.source.encoding>
         <maven.compile.plugin.version>3.7.0</maven.compile.plugin.version>
         <java.source.version>1.8</java.source.version>
