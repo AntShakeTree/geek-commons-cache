@@ -23,7 +23,7 @@
         <springboot.version>2.1.0.RELEASE</springboot.version>
         <aspectj.version>1.9.2</aspectj.version>
         <apache.commons>3.8.1</apache.commons>
-        <google.guava>26.0-jre</google.guava>
+        <google.guava>29.0-jre</google.guava>
         <slf4j.version>1.7.25</slf4j.version>
     </properties>
     <!--<parent>-->
