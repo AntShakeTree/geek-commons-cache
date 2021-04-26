@@ -17,7 +17,7 @@
         <maven.compile.plugin.version>3.7.0</maven.compile.plugin.version>
         <java.source.version>1.8</java.source.version>
         <jdk.version>1.8</jdk.version>
-        <apache.commons.io>2.6</apache.commons.io>
+        <apache.commons.io>2.7</apache.commons.io>
         <apache.commons.collections>4.1</apache.commons.collections>
         <lombok.version>1.16.20</lombok.version>
         <springboot.version>2.1.0.RELEASE</springboot.version>
